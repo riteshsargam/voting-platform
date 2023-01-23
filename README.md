@@ -94,7 +94,3 @@ Application Software Requirements
    npm run dev
    ```
 5. Visit http://localhost:3000 after Server Start.
-
-## Tutorial For Installation
-
-Here is simple Installation Tutorial to follow [Watch Video](https://drive.google.com/file/d/1C5DE6Q8I757vssoTa2HxqitnsGlvWX9e/view?usp=share_link)
