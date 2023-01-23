@@ -1,7 +1,8 @@
 # The Voting Application
 
 This is an Online Voting Application built using NodeJs and ExpressJS using the EJS View Engine
-- Database -> *postgresql* Database.
+
+- Database -> _postgresql_ Database.
 - Authentication -> PassportJS for Local Authentication.
 - ORM -> Sequelize
 
@@ -10,6 +11,7 @@ This is an Online Voting Application built using NodeJs and ExpressJS using the 
 The Application is Deployed on Render.com - [click here to visit](https://voting-app-uw8b.onrender.com/)
 
 This Application is build around Two Personas
+
 1. Election Admin - Create/Hosts Elections with Questions to Answer
 2. Voter - Is Given a VoterID and Password to Vote in elections
 
@@ -27,7 +29,6 @@ Election Admin can Create Multiple choice Questions with number of options but e
 
 Election Admin can preview results of election as the election is Going on and Can End election at any time. Election Admin cannot change Questions and Options once the election is launched but can add or Delete Voters.
 
-
 ## Voter
 
 The Voter is Given a VoterID and password with which they can access and vote in an Election.
@@ -38,53 +39,62 @@ Voter can see the results only after the Election Ends.
 
 Voter can either visit the PUBLIC URL given by Election Admin or directly login to Vote in assigned Election.
 
-
 ## Election Admin Pages - Screenshots
 
 #### **Displays All Election**
+
 ![Elections Page](/images/Elections.jpg)
 
 #### **Election Page**
+
 ![Specific Election Page](/images/election.jpg)
 
 #### **Voters Page**
+
 ![Voters Page](/images/voters.jpg)
 
 #### **Question Page**
+
 ![Questions Page](/images/questions.jpg)
 
 #### Results Page
+
 ![Results Page](/images/results.jpg)
 
 ## Voter Pages - Screenshots
 
 #### Voter Voting Page
-![Voting Page](/images/voting.jpg)
 
+![Voting Page](/images/voting.jpg)
 
 ## Application Replication
 
 Application Software Requirements
-- POSTGRESQL 
+
+- POSTGRESQL
 
 1. Install Postgresql locally from [here](https://www.postgresql.org/download/)
 
 2. Run these Commnads in CMD or Terminal
-    ```
-    git clone https://github.com/riteshsargam/voting-platform.git
-    cd Voting_app
-    npm i
-    npm i --save-dev
-    ```
+   ```
+   git clone https://github.com/riteshsargam/voting-platform.git
+   cd Voting_app
+   npm i
+   npm i --save-dev
+   ```
 3. We have to create DATABASE locally and Migrate.
-    ```
-    npx sequelize-cli db:create
-    npx sequelize-cli db:migrate
-    ```
+   ```
+   npx sequelize-cli db:create
+   npx sequelize-cli db:migrate
+   ```
 4. Start the server
-    ```
-    node index.js
-    or 
-    npm run dev
-    ```
-4. Visit http://localhost:3000 after Server Start.
+   ```
+   node index.js
+   or
+   npm run dev
+   ```
+5. Visit http://localhost:3000 after Server Start.
+
+## Tutorial For Installation
+
+Here is simple Installation Tutorial to follow [Watch Video](https://drive.google.com/file/d/1C5DE6Q8I757vssoTa2HxqitnsGlvWX9e/view?usp=share_link)

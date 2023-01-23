@@ -25,6 +25,9 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static async createElection({ electionName, customString, UId }) {
+      if (!electionName || !UId) {
+        throw new Error("OLD Option IDs are required");
+      }
       const election = await Elections.create({
         electionName: electionName,
         customString: customString,
@@ -34,6 +37,9 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static async getElectionsofUser({ UId }) {
+      if (!UId) {
+        throw new Error("User Id is required");
+      }
       return await this.findAll({
         where: {
           UId: UId,
@@ -42,6 +48,9 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
     static async isElectionLive({ EID }) {
+      if (!EID) {
+        throw new Error("Election Id is required");
+      }
       let election = await this.findOne({
         where: {
           id: EID,
@@ -70,10 +79,7 @@ module.exports = (sequelize, DataTypes) => {
 
     static async electionEnded({ EID }) {
       if (EID == null || EID == undefined || EID == "") {
-        return {
-          success: false,
-          message: "Election Not Found",
-        };
+        throw new Error("Election Id is required");
       } else {
         const election = await this.findOne({
           where: {
@@ -102,6 +108,9 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static async getLiveElectionsofUser({ UId }) {
+      if (!UId) {
+        throw new Error("User Id is required");
+      }
       return await this.findAll({
         where: {
           UId: UId,
@@ -111,6 +120,9 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static async launchElection({ EId, UId }) {
+      if (!EId || !UId) {
+        throw new Error("Election Id and User Id are required");
+      }
       let election = await this.findOne({
         where: {
           id: EId,
@@ -123,6 +135,9 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static async endElection({ EId, UId }) {
+      if (!EId || !UId) {
+        throw new Error("Election Id and User Id are required");
+      }
       let election = await this.findOne({
         where: {
           id: EId,
@@ -135,6 +150,9 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static async isElectionbelongstoUser({ EId, UId }) {
+      if (!EId || !UId) {
+        throw new Error("Election Id and User Id are required");
+      }
       let election = await this.findOne({
         where: {
           id: EId,
@@ -163,6 +181,9 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static async getElection({ EId }) {
+      if (!EId) {
+        throw new Error("Election Id is required");
+      }
       return await this.findOne({
         where: {
           id: EId,
@@ -171,6 +192,9 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static async deleteElection({ EId }) {
+      if (!EId) {
+        throw new Error("Election Id is required");
+      }
       return await this.destroy({
         where: {
           id: EId,

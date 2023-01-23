@@ -21,6 +21,9 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static async getAllOptionsOfQuestion({ QId }) {
+      if (!QId) {
+        throw new Error("Question Id is required");
+      }
       const options = await Option.findAll({
         where: {
           QId: QId,
@@ -30,7 +33,9 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static async createOption({ desc, QId }) {
-      // console.log("desc: " + desc + " QId: " + QId);
+      if (!desc || !QId) {
+        throw new Error("Option description and Question Id are required");
+      }
       const option = await Option.create({
         desc: desc,
         QId: QId,
@@ -40,10 +45,23 @@ module.exports = (sequelize, DataTypes) => {
 
     static async doesOptionBelongToQuestion({ QID, OID }) {
       // console.log(OID, QID)
+      if (!QID || !OID) {
+        throw new Error("Question Id and Option Id are required");
+      }
       return await Option.findOne({
         where: {
           QId: QID,
           id: OID,
+        },
+      });
+    }
+    static async deleteAlloptionsOfQuestion({ optionIDs }) {
+      if (optionIDs.length === 0) {
+        throw new Error("OLD Option IDs are required");
+      }
+      return await Option.destroy({
+        where: {
+          id: optionIDs,
         },
       });
     }

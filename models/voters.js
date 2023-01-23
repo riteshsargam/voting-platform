@@ -21,6 +21,9 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static async getAllVotersofElection({ EId, UId }) {
+      if (!EId || !UId) {
+        throw new Error("Election Id and User Id are required");
+      }
       return await this.findAll({
         where: {
           EId: EId,
@@ -38,6 +41,9 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static async getElectionOfVoter({ VId, EId }) {
+      if (!VId || !EId) {
+        throw new Error("Voter Id and Election Id are required");
+      }
       return await this.findOne({
         where: {
           id: VId,
@@ -61,6 +67,9 @@ module.exports = (sequelize, DataTypes) => {
       lastname,
       EId,
     }) {
+      if (!voterid || !password || !EId) {
+        throw new Error("Voter ID, Password and Election ID are required");
+      }
       const voter = await Voters.create({
         voterid: voterid,
         password: password,
@@ -74,6 +83,9 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static async remove(VId, EId) {
+      if (!VId || !EId) {
+        throw new Error("Voter Id and Election Id are required");
+      }
       return this.destroy({
         where: {
           id: VId,

@@ -30,29 +30,27 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static async createVote({ VID, QID, OID }) {
-      if (VID && QID && OID) {
-        const vote = await Vote.create({
-          VId: VID,
-          QId: QID,
-          OId: OID,
-        });
-        return vote;
-      } else {
-        return null;
+      if (!VID || !QID || !OID) {
+        throw new Error("Voter Id, Question Id and Option Id are required");
       }
+      const vote = await Vote.create({
+        VId: VID,
+        QId: QID,
+        OId: OID,
+      });
+      return vote;
     }
 
     static async getVotesOfOption({ OID }) {
-      if (OID) {
-        const votes = await Vote.findAll({
-          where: {
-            OId: OID,
-          },
-        });
-        return votes;
-      } else {
-        return null;
+      if (!OID) {
+        throw new Error("Option Id is required");
       }
+      const votes = await Vote.findAll({
+        where: {
+          OId: OID,
+        },
+      });
+      return votes;
     }
 
     static async hasVoted({ VID, QID }) {

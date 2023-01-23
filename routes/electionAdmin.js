@@ -516,6 +516,12 @@ router.post("/election/questions", async (req, res) => {
         try {
           const newQuestion = await Question.createQuestion(question);
           for (let i = 0; i < options.length; i++) {
+            if (
+              options[i] === "" ||
+              options[i] === null ||
+              options[i] === undefined
+            )
+              continue;
             await Option.createOption({
               desc: options[i],
               QId: newQuestion.id,
@@ -537,6 +543,134 @@ router.post("/election/questions", async (req, res) => {
         console.log("Election is already live");
         req.flash("error", "Election is already live");
         res.redirect(`/admin/election/questions/${EID}`);
+      }
+    } else {
+      console.log("Unauthorized Access");
+      req.flash(
+        "error",
+        isUserElection.ended ? "Election Ended" : "Unauthorized Access"
+      );
+      res.redirect("/admin/elections");
+    }
+  } catch {
+    (error) => {
+      console.log(error);
+      req.flash(
+        "error",
+        error.errors.map((error) => error.message)
+      );
+      res.redirect(`/admin/elections`);
+    };
+  }
+});
+
+// Route to edit a question and its options
+router.get(
+  "/election/question/:id/:QID",
+  connectEnsureLogin.ensureLoggedIn({ redirectTo: "/admin" }),
+  async (req, res) => {
+    console.log("Edit Question Route Accessed");
+    const EID = req.params.id;
+    const UID = req.user.id;
+    const QID = req.params.QID;
+    const doesElectionBelongToUser = await Elections.isElectionbelongstoUser({
+      EId: EID,
+      UId: UID,
+    });
+    try {
+      if (doesElectionBelongToUser.success) {
+        const question = await Question.getQuestion({ QId: QID, EId: EID });
+        const options = await Option.getAllOptionsOfQuestion({
+          QId: QID,
+          UId: UID,
+        });
+        if (req.accepts("html")) {
+          res.render("admin/editQuestion", {
+            title: `Edit Question ${QID}`,
+            csrfToken: req.csrfToken(),
+            question,
+            options,
+            election: doesElectionBelongToUser,
+            EID,
+          });
+        } else {
+          res.json({
+            question,
+            options,
+            EID,
+          });
+        }
+      } else {
+        res.status(401).json({
+          success: false,
+        });
+      }
+    } catch {
+      (error) => {
+        console.log(error);
+        req.flash(
+          "error",
+          error.errors.map((error) => error.message)
+        );
+        res.redirect(`/admin/elections`);
+      };
+    }
+  }
+);
+
+router.post("/election/question", async (req, res) => {
+  const EID = req.body.EID;
+  const UId = req.user.id;
+  const question = {
+    title: req.body.title,
+    desc: req.body.desc,
+    EId: req.body.EID,
+    id: req.body.QID,
+  };
+  const options = req.body.options;
+  try {
+    const isUserElection = await Elections.isElectionbelongstoUser({
+      EId: EID,
+      UId,
+    });
+    if (isUserElection.success && !isUserElection.ended) {
+      if (!isUserElection.isLive) {
+        try {
+          await Question.updateQuestion(question);
+          const oldOptions = await Option.getAllOptionsOfQuestion({
+            QId: question.id,
+          });
+          await Option.deleteAlloptionsOfQuestion({
+            optionIDs: oldOptions.map((option) => option.id),
+          });
+          for (let i = 0; i < options.length; i++) {
+            if (
+              options[i] === "" ||
+              options[i] === null ||
+              options[i] === undefined
+            )
+              continue;
+            await Option.createOption({
+              desc: options[i],
+              QId: question.id,
+            });
+          }
+          req.flash("success", "Question Updated Successfully");
+          res.redirect(`/admin/election/questions/${EID}`);
+        } catch {
+          (error) => {
+            console.log(error);
+            req.flash(
+              "error",
+              error.errors.map((error) => error.message)
+            );
+            res.redirect(`/admin/election/quesitons/${EID}`);
+          };
+        }
+      } else {
+        console.log("Election is already live");
+        req.flash("error", "Election is already live");
+        res.redirect(`/admin/election/${EID}`);
       }
     } else {
       console.log("Unauthorized Access");

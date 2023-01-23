@@ -27,6 +27,9 @@ module.exports = (sequelize, DataTypes) => {
 
     // Get all questions of an election with options from Option model
     static async getAllQuestionsofElection({ EId, UId }) {
+      if (!EId || !UId) {
+        throw new Error("Election Id and User Id are required");
+      }
       const questions = await Question.findAll({
         where: {
           EId,
@@ -44,7 +47,23 @@ module.exports = (sequelize, DataTypes) => {
       return questions;
     }
 
+    static async getQuestion({ QId, EId }) {
+      if (!QId || !EId) {
+        throw new Error("Question Id and Election Id are required");
+      }
+      const question = await Question.findOne({
+        where: {
+          id: QId,
+          EId: EId,
+        },
+      });
+      return question;
+    }
+
     static async getQuesionsOfElection({ EId }) {
+      if (!EId) {
+        throw new Error("Election Id is required");
+      }
       const questions = await Question.findAll({
         where: {
           EId: EId,
@@ -54,6 +73,9 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static async deleteQuestion({ QId, EID }) {
+      if (!QId || !EID) {
+        throw new Error("Question Id and Election Id are required");
+      }
       return await Question.destroy({
         where: {
           id: QId,
@@ -63,12 +85,36 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static async createQuestion({ title, desc, EId }) {
+      if (!title || !desc || !EId) {
+        throw new Error("Title, description and Election Id are required");
+      }
       const question = await Question.create({
         title: title,
         desc: desc,
         EId: EId,
       });
       return question;
+    }
+
+    static async updateQuestion(question) {
+      if (!question) {
+        throw new Error("Question cannot be null");
+      }
+      if (!question.title || !question.desc) {
+        throw new Error("Title or description cannot be empty");
+      }
+      const updatedQuestion = await Question.update(
+        {
+          title: question.title,
+          desc: question.desc,
+        },
+        {
+          where: {
+            id: question.id,
+          },
+        }
+      );
+      return updatedQuestion;
     }
   }
   Question.init(

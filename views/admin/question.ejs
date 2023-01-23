@@ -19,6 +19,9 @@
                     Options
                 </th>
                 <th scope="col" class="py-3 px-6">
+                    Edit
+                </th>
+                <th scope="col" class="py-3 px-6">
                     Action
                 </th>
             </tr>
@@ -35,6 +38,9 @@
               <td class="py-4 px-6">
                   <%= question.options.length %>
               </td>
+              <td class="py-4 px-6">
+                <a href="/admin/election/question/<%= question.EId %>/<%= question.id %>" class="font-medium text-blue-600 hover:underline">Edit</a>
+            </td>
               <td class="py-4 px-6">
                   <a href="#" class="font-medium text-blue-600 hover:underline" onclick="deleteQuestion(<%= question.id %>)">Delete</a>
               </td>
